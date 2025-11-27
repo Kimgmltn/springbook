@@ -1,6 +1,6 @@
-package ch06.springbook.user.dao;
+package ch07.springbook.user.dao;
 
-import ch06.springbook.user.domain.User;
+import ch07.springbook.user.domain.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -26,7 +26,6 @@ public class UserDao {
         ps.close();
         c.close();
     }
-
 
     public User get(String id) throws ClassNotFoundException, SQLException {
         Connection c = connectionMaker.getConnection();
