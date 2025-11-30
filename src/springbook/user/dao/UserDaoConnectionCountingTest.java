@@ -1,16 +1,25 @@
 package springbook.user.dao;
 
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.GenericXmlApplicationContext;
+import springbook.user.domain.User;
 
 import java.sql.SQLException;
 
 public class UserDaoConnectionCountingTest {
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(CountingDaoFactory.class);
+        //JAVA 파일을 설정으로 사용
+//        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(CountingDaoFactory.class);
+        //XML 파일을 설정으로 사용
+        // 경로 : /applicationContext.xml
+        ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
         UserDao dao = context.getBean("userDao", UserDao.class);
-        dao.get("test");
+        User user = dao.get("test");
 
-        CountingConnectionMaker ccm = context.getBean("connectionMaker", CountingConnectionMaker.class);
-        System.out.println("connection count : " + ccm.getCounter());
+        System.out.println("user name = " + user.getName());
+
+//        CountingConnectionMaker ccm = context.getBean("connectionMaker", CountingConnectionMaker.class);
+//        System.out.println("connection count : " + ccm.getCounter());
     }
 }
