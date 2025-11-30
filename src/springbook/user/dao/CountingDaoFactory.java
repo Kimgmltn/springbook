@@ -8,7 +8,13 @@ public class CountingDaoFactory {
 
     @Bean
     public UserDao userDao() {
-        return new UserDao(connectionMaker());
+        //생성자 방식
+//        return new UserDao(connectionMaker());
+
+        //메서드 방식
+        UserDao userDao = new UserDao();
+        userDao.setConnectionMaker(connectionMaker());
+        return userDao;
     }
 
     @Bean
