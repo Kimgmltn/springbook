@@ -12,7 +12,7 @@ public class UserDaoConnectionCountingTest {
         //JAVA 파일을 설정으로 사용
 //        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(CountingDaoFactory.class);
         //XML 파일을 설정으로 사용
-        // 경로 : /applicationContext.xml
+        // 경로 : src/applicationContext.xml
         ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
         UserDao dao = context.getBean("userDao", UserDao.class);
         User user = dao.get("test");
