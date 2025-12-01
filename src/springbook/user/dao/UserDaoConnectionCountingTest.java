@@ -10,10 +10,10 @@ import java.sql.SQLException;
 public class UserDaoConnectionCountingTest {
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
         //JAVA 파일을 설정으로 사용
-//        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(CountingDaoFactory.class);
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
         //XML 파일을 설정으로 사용
-        // 경로 : src/applicationContext.xml
-        ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
+        // 경로 : src/applicationContext.xmlÎ
+//        ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
         UserDao dao = context.getBean("userDao", UserDao.class);
         User user = dao.get("test");
 
