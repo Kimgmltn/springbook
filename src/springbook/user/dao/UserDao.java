@@ -40,7 +40,7 @@ public class UserDao {
         Connection c = dataSource.getConnection();
         PreparedStatement ps = c.prepareStatement("select * from users where id = ?");
         ps.setString(1, id);
-
+        {
         ResultSet rs = ps.executeQuery();
         rs.next();
         User user = new User();
@@ -54,4 +54,4 @@ public class UserDao {
 
         return user;
     }
-}
+}}
