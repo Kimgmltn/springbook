@@ -1,5 +1,7 @@
 package springbook.user.dao;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Test;
@@ -11,7 +13,12 @@ import springbook.user.domain.User;
 
 import java.sql.SQLException;
 
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
+
 public class UserDaoTest {
+    private static final Log log = LogFactory.getLog(UserDaoTest.class);
+
     public static void main(String[] args) throws ClassNotFoundException,SQLException {
         JUnitCore.main("springbook.user.dao.UserDaoTest");
     }
@@ -21,16 +28,21 @@ public class UserDaoTest {
         ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 
         UserDao dao = context.getBean("userDao", UserDao.class);
+
+        dao.deleteAll();
+        assertThat(dao.getCount(), is(0));
+
         User user1 = new User();
         user1.setId("test1");
         user1.setName("test1");
         user1.setPassword("test1");
 
         dao.add(user1);
+        assertThat(dao.getCount(), is(1));
 
         User user2 = dao.get(user1.getId());
 
-        Assert.assertThat(user2.getName(), CoreMatchers.is(user1.getName()));
-        Assert.assertThat(user2.getPassword(), CoreMatchers.is(user1.getPassword()));
+        assertThat(user2.getName(), is(user1.getName()));
+        assertThat(user2.getPassword(), is(user1.getPassword()));
     }
 }
