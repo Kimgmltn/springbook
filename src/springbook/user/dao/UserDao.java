@@ -23,7 +23,7 @@ public class UserDao {
         this.dataSource = dataSource;
     }
 
-    public void add(springbook.user.domain.User user) throws ClassNotFoundException, SQLException {
+    public void add(springbook.user.domain.User user) throws SQLException {
         Connection c = dataSource.getConnection();
         PreparedStatement ps = c.prepareStatement("insert into users (id, name, password) values (?, ?, ?)");
         ps.setString(1, user.getId());

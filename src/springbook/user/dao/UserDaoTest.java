@@ -9,6 +9,7 @@ import org.junit.runner.JUnitCore;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.support.GenericXmlApplicationContext;
 import springbook.user.domain.User;
 
 import java.sql.SQLException;
@@ -44,5 +45,27 @@ public class UserDaoTest {
 
         assertThat(user2.getName(), is(user1.getName()));
         assertThat(user2.getPassword(), is(user1.getPassword()));
+    }
+
+    @Test
+    public void count() throws SQLException{
+        ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
+
+        UserDao dao = context.getBean("userDao", UserDao.class);
+        User user1 = new User("test1", "test1", "test1");
+        User user2 = new User("test2", "test2", "test2");
+        User user3 = new User("test3", "test3", "test3");
+
+        dao.deleteAll();
+        assertThat(dao.getCount(), is(0));
+
+        dao.add(user1);
+        assertThat(dao.getCount(), is(1));
+
+        dao.add(user2);
+        assertThat(dao.getCount(), is(2));
+
+        dao.add(user3);
+        assertThat(dao.getCount(), is(3));
     }
 }
