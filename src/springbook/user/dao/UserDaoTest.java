@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
 import org.springframework.context.ApplicationContext;
@@ -20,17 +21,20 @@ import static org.junit.Assert.*;
 
 public class UserDaoTest {
     private static final Log log = LogFactory.getLog(UserDaoTest.class);
+    private UserDao dao;
 
     public static void main(String[] args) throws ClassNotFoundException,SQLException {
         JUnitCore.main("springbook.user.dao.UserDaoTest");
     }
 
+    @Before
+    public void setUp(){
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+        dao = context.getBean("userDao", UserDao.class);
+    }
+
     @Test
     public void addAndGet() throws ClassNotFoundException, SQLException {
-        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
-
-        UserDao dao = context.getBean("userDao", UserDao.class);
-
         User user1 = new User("test1", "test1", "test1");
         User user2 = new User("test2", "test2", "test2");
 
@@ -53,9 +57,6 @@ public class UserDaoTest {
 
     @Test
     public void count() throws SQLException{
-        ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
-
-        UserDao dao = context.getBean("userDao", UserDao.class);
         User user1 = new User("test1", "test1", "test1");
         User user2 = new User("test2", "test2", "test2");
         User user3 = new User("test3", "test3", "test3");
@@ -75,8 +76,6 @@ public class UserDaoTest {
 
     @Test(expected = NoSuchElementException.class)
     public void getUserFailure() throws SQLException, ClassNotFoundException {
-        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
-        UserDao dao = context.getBean("userDao", UserDao.class);
         dao.deleteAll();
         assertThat(dao.getCount(), is(0));
 
