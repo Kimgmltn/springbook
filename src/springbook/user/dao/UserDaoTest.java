@@ -22,22 +22,21 @@ import static org.junit.Assert.*;
 public class UserDaoTest {
     private static final Log log = LogFactory.getLog(UserDaoTest.class);
     private UserDao dao;
-
-    public static void main(String[] args) throws ClassNotFoundException,SQLException {
-        JUnitCore.main("springbook.user.dao.UserDaoTest");
-    }
+    private User user1;
+    private User user2;
+    private User user3;
 
     @Before
     public void setUp(){
         ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
         dao = context.getBean("userDao", UserDao.class);
+        this.user1 = new User("test1", "test1", "test1");
+        this.user2 = new User("test2", "test2", "test2");
+        this.user3 = new User("test3", "test3", "test3");
     }
 
     @Test
     public void addAndGet() throws ClassNotFoundException, SQLException {
-        User user1 = new User("test1", "test1", "test1");
-        User user2 = new User("test2", "test2", "test2");
-
         dao.deleteAll();
         assertThat(dao.getCount(), is(0));
 
@@ -57,10 +56,6 @@ public class UserDaoTest {
 
     @Test
     public void count() throws SQLException{
-        User user1 = new User("test1", "test1", "test1");
-        User user2 = new User("test2", "test2", "test2");
-        User user3 = new User("test3", "test3", "test3");
-
         dao.deleteAll();
         assertThat(dao.getCount(), is(0));
 
