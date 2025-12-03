@@ -13,6 +13,7 @@ import org.springframework.context.support.GenericXmlApplicationContext;
 import springbook.user.domain.User;
 
 import java.sql.SQLException;
+import java.util.NoSuchElementException;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
@@ -70,5 +71,15 @@ public class UserDaoTest {
 
         dao.add(user3);
         assertThat(dao.getCount(), is(3));
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void getUserFailure() throws SQLException, ClassNotFoundException {
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+        UserDao dao = context.getBean("userDao", UserDao.class);
+        dao.deleteAll();
+        assertThat(dao.getCount(), is(0));
+
+        dao.get("unknown_id");
     }
 }
