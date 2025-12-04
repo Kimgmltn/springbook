@@ -29,6 +29,7 @@ public class UserDaoTest {
     private static final Log log = LogFactory.getLog(UserDaoTest.class);
     @Autowired
     private ApplicationContext context;
+    @Autowired
     private UserDao dao;
     private User user1;
     private User user2;
@@ -36,7 +37,6 @@ public class UserDaoTest {
 
     @Before
     public void setUp(){
-        dao = this.context.getBean("userDao", UserDao.class);
         this.user1 = new User("test1", "test1", "test1");
         this.user2 = new User("test2", "test2", "test2");
         this.user3 = new User("test3", "test3", "test3");
