@@ -27,8 +27,7 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class) //스프링의 테스트 컨텍스트 프레임워크의 Junit확장기능 지정
-@ContextConfiguration(locations = "/applicationContext.xml")    //테스트 컨텍스트가 자동으로 만들어줄 애플리케이션 컨텍스트 위치 지정
-@DirtiesContext //테스트 내에서 DI변경한다고 알려주기
+@ContextConfiguration(locations = "/test-applicationContext.xml")    //테스트 컨텍스트가 자동으로 만들어줄 애플리케이션 컨텍스트 위치 지정
 public class UserDaoTest {
     private static final Log log = LogFactory.getLog(UserDaoTest.class);
     @Autowired
@@ -41,8 +40,6 @@ public class UserDaoTest {
 
     @Before
     public void setUp(){
-        DataSource dataSource = new SingleConnectionDataSource("jdbc:postgresql://localhost:5432/postgres", "heesu", null, true);
-        dao.setDataSource(dataSource);
         this.user1 = new User("test1", "test1", "test1");
         this.user2 = new User("test2", "test2", "test2");
         this.user3 = new User("test3", "test3", "test3");
