@@ -12,6 +12,17 @@ import java.util.List;
 public class UserDao {
     private JdbcTemplate jdbcTemplate;  //spring에서 제공하는 jdbcTemplate사용
 
+    private RowMapper<User> userMapper = new RowMapper<User>() {
+        @Override
+        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+            User user = new User();
+            user.setId(rs.getString("id"));
+            user.setName(rs.getString("name"));
+            user.setPassword(rs.getString("password"));
+            return user;
+        }
+    };
+
     public UserDao() {}
 
     public void setDataSource(DataSource dataSource) {
@@ -26,16 +37,7 @@ public class UserDao {
     public User get(String id) throws SQLException {
         return this.jdbcTemplate.queryForObject("select * from users where id = ?",
                 new Object[] {id},
-                new RowMapper<User>() {
-                    @Override
-                    public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        User user = new User();
-                        user.setId(rs.getString("id"));
-                        user.setName(rs.getString("name"));
-                        user.setPassword(rs.getString("password"));
-                        return user;
-                    }
-                });
+                userMapper);
     }
 
     public int getCount() throws SQLException{
@@ -48,15 +50,6 @@ public class UserDao {
 
     public List<User> getAll() {
         return this.jdbcTemplate.query("select * from users order by id",
-                new  RowMapper<User>() {
-                    @Override
-                    public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        User user = new User();
-                        user.setId(rs.getString("id"));
-                        user.setName(rs.getString("name"));
-                        user.setPassword(rs.getString("password"));
-                        return user;
-                    }
-                });
+                userMapper);
     }
 }
