@@ -5,26 +5,17 @@ import org.springframework.jdbc.core.RowMapper;
 import springbook.user.domain.User;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 public class UserDao {
     private JdbcTemplate jdbcTemplate;  //spring에서 제공하는 jdbcTemplate사용
-    private DataSource dataSource;
-
-    public UserDao(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
 
     public UserDao() {}
 
     public void setDataSource(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.dataSource = dataSource;
     }
 
     public void add(User user) {

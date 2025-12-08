@@ -1,6 +1,5 @@
 package springbook.user.dao;
 
-import org.postgresql.jdbc2.optional.SimpleDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
@@ -11,7 +10,9 @@ import javax.sql.DataSource;
 public class DaoFactory {
     @Bean
     public UserDao userDao(){
-        return new UserDao(getDConnectionMaker());
+        UserDao userDao=new UserDao();
+        userDao.setDataSource(getDConnectionMaker());
+        return userDao;
     }
 
     @Bean
