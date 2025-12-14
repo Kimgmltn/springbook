@@ -12,7 +12,7 @@ public class CountingDaoFactory {
 //        return new UserDao(connectionMaker());
 
         //메서드 방식
-        UserDao userDao = new UserDao();
+        UserDao userDao = new UserDaoJdbc();
 //        userDao.setDataSource(connectionMaker());
         return userDao;
     }
