@@ -32,9 +32,9 @@ public class UserDaoTest {
 
     @Before
     public void setUp(){
-        this.user1 = new User("test1", "test1", "test1");
-        this.user2 = new User("test2", "test2", "test2");
-        this.user3 = new User("test3", "test3", "test3");
+        this.user1 = new User("test1", "test1", "test1", Level.BASIC, 1, 0);
+        this.user2 = new User("test2", "test2", "test2", Level.SILVER, 55, 10);
+        this.user3 = new User("test3", "test3", "test3", Level.GOLD, 100, 40);
     }
 
     @Test
@@ -47,12 +47,10 @@ public class UserDaoTest {
         assertThat(dao.getCount(), is(2));
 
         User userget1 = dao.get(user1.getId());
-        assertThat(userget1.getName(), is(user1.getName()));
-        assertThat(userget1.getPassword(), is(user1.getPassword()));
+        checkSameUser(userget1, user1);
 
         User userget2 = dao.get(user2.getId());
-        assertThat(userget2.getName(), is(user2.getName()));
-        assertThat(userget2.getPassword(), is(user2.getPassword()));
+        checkSameUser(userget2, user2);
 
     }
 
@@ -109,5 +107,8 @@ public class UserDaoTest {
         assertThat(user1.getId(), is(user2.getId()));
         assertThat(user1.getName(), is(user2.getName()));
         assertThat(user1.getPassword(), is(user2.getPassword()));
+        assertThat(user1.getLevel(), is(user2.getLevel()));
+        assertThat(user1.getLogin(), is(user2.getLogin()));
+        assertThat(user1.getRecommend(), is(user2.getRecommend()));
     }
 }
