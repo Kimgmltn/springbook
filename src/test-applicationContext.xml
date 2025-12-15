@@ -5,12 +5,12 @@
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
         <property name="driverClass" value="org.postgresql.Driver"/>
-<!--        <property name="url" value="jdbc:postgresql://localhost:5432/postgres"/>-->
-<!--        <property name="username" value="heesu"/>-->
-<!--        <property name="password"><null/></property>-->
-        <property name="username" value="postgres"/>
-        <property name="url" value="jdbc:postgresql://localhost:5432/hs"/>
-        <property name="password" value="gmltn0323@"></property>
+        <property name="url" value="jdbc:postgresql://localhost:5432/postgres"/>
+        <property name="username" value="heesu"/>
+        <property name="password"><null/></property>
+<!--        <property name="username" value="postgres"/>-->
+<!--        <property name="url" value="jdbc:postgresql://localhost:5432/hs"/>-->
+<!--        <property name="password" value="gmltn0323@"></property>-->
     </bean>
 
     <bean id="userService" class="springbook.user.service.UserService">
