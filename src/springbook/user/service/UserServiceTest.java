@@ -91,6 +91,8 @@ public class UserServiceTest {
         testUserService.setUserDao(this.userDao);
         userDao.deleteAll();
 
+        for(User user : users) testUserService.add(user);
+
         try {
             testUserService.upgradeLevels();
             fail("TestUserServiceException expected");
