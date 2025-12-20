@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.PlatformTransactionManager;
 import springbook.user.dao.Level;
 import springbook.user.dao.UserDao;
 import springbook.user.domain.User;
@@ -24,11 +25,11 @@ import static org.junit.Assert.fail;
 public class UserServiceTest {
     @Autowired
     UserService userService;
+    @Autowired
+    PlatformTransactionManager transactionManager;
 
     @Autowired
     UserDao userDao;
-    @Autowired
-    DataSource dataSource;
     List<User> users;
     public static final int MIN_LOGCOUNT_FOR_SILVER = 50;
     public static final int MIN_RECCOMEND_FOR_GOLD = 30;
@@ -50,7 +51,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void updateLevels() throws Exception{
+    public void updateLevels(){
         userDao.deleteAll();
         for(User user : users) userDao.add(user);
 
@@ -89,10 +90,10 @@ public class UserServiceTest {
     }
 
     @Test
-    public void upgradeAllOrNothing() throws Exception{
+    public void upgradeAllOrNothing(){
         TestUserService testUserService = new TestUserService(users.get(3).getId());
         testUserService.setUserDao(this.userDao);
-        testUserService.setDataSource(this.dataSource);
+        testUserService.setTransactionManager(transactionManager);
         userDao.deleteAll();
 
         for(User user : users) testUserService.add(user);
