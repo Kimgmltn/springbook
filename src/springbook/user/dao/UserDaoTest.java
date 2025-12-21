@@ -32,9 +32,9 @@ public class UserDaoTest {
 
     @Before
     public void setUp(){
-        this.user1 = new User("test1", "test1", "test1", Level.BASIC, 1, 0);
-        this.user2 = new User("test2", "test2", "test2", Level.SILVER, 55, 10);
-        this.user3 = new User("test3", "test3", "test3", Level.GOLD, 100, 40);
+        this.user1 = new User("test1", "test1", "test1", Level.BASIC, 1, 0,"test1@email.com");
+        this.user2 = new User("test2", "test2", "test2", Level.SILVER, 55, 10, "test2@email.com");
+        this.user3 = new User("test3", "test3", "test3", Level.GOLD, 100, 40, "test3@email.com");
     }
 
     @Test
@@ -114,6 +114,7 @@ public class UserDaoTest {
         user1.setLevel(Level.GOLD);
         user1.setLogin(1000);
         user1.setRecommend(999);
+        user1.setEmail("test4@email.com");
         dao.update(user1);
 
         User user1update = dao.get(user1.getId());
