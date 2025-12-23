@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailSender;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -27,7 +28,8 @@ public class UserServiceTest {
     UserService userService;
     @Autowired
     PlatformTransactionManager transactionManager;
-
+    @Autowired
+    MailSender mailSender;
     @Autowired
     UserDao userDao;
     List<User> users;
@@ -37,11 +39,11 @@ public class UserServiceTest {
     @Before
     public void setUp(){
         users = Arrays.asList(
-                new User("test1", "test1", "p1", Level.BASIC, MIN_LOGCOUNT_FOR_SILVER - 1, 0),
-                new User("test2", "test2", "p2", Level.BASIC, MIN_LOGCOUNT_FOR_SILVER, 0),
-                new User("test3", "test3", "p3", Level.SILVER, 60, MIN_RECCOMEND_FOR_GOLD - 1),
-                new User("test4", "test4", "p4", Level.SILVER, 60, MIN_RECCOMEND_FOR_GOLD),
-                new User("test5", "test5", "p5", Level.GOLD, 100, Integer.MAX_VALUE)
+                new User("test1", "test1", "p1", Level.BASIC, MIN_LOGCOUNT_FOR_SILVER - 1, 0, "test1@email.com"),
+                new User("test2", "test2", "p2", Level.BASIC, MIN_LOGCOUNT_FOR_SILVER, 0, "test2@email.com"),
+                new User("test3", "test3", "p3", Level.SILVER, 60, MIN_RECCOMEND_FOR_GOLD - 1, "test3@email.com"),
+                new User("test4", "test4", "p4", Level.SILVER, 60, MIN_RECCOMEND_FOR_GOLD, "test4@email.com"),
+                new User("test5", "test5", "p5", Level.GOLD, 100, Integer.MAX_VALUE, "test5@email.com")
         );
     }
 
@@ -94,6 +96,7 @@ public class UserServiceTest {
         TestUserService testUserService = new TestUserService(users.get(3).getId());
         testUserService.setUserDao(this.userDao);
         testUserService.setTransactionManager(transactionManager);
+        testUserService.setMailSender(this.mailSender);
         userDao.deleteAll();
 
         for(User user : users) testUserService.add(user);
