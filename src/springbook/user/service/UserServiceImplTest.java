@@ -15,7 +15,6 @@ import springbook.user.dao.Level;
 import springbook.user.dao.UserDao;
 import springbook.user.domain.User;
 
-import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,9 +26,9 @@ import static org.junit.Assert.fail;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "/test-applicationContext.xml")
-public class UserServiceTest {
+public class UserServiceImplTest {
     @Autowired
-    UserService userService;
+    UserServiceImpl userServiceImpl;
     @Autowired
     PlatformTransactionManager transactionManager;
     @Autowired
@@ -53,7 +52,7 @@ public class UserServiceTest {
 
     @Test
     public void bean(){
-        assertThat(this.userService, is(notNullValue()));
+        assertThat(this.userServiceImpl, is(notNullValue()));
     }
 
     @Test
@@ -63,9 +62,9 @@ public class UserServiceTest {
         for(User user : users) userDao.add(user);
 
         MockMailSender mockMailSender = new MockMailSender();
-        userService.setMailSender(mockMailSender);
+        userServiceImpl.setMailSender(mockMailSender);
 
-        userService.upgradeLevels();
+        userServiceImpl.upgradeLevels();
         checkLevelUpgraded(users.get(0), false);
         checkLevelUpgraded(users.get(1), true);
         checkLevelUpgraded(users.get(2), false);
@@ -95,8 +94,8 @@ public class UserServiceTest {
         User userWithoutLevel = users.get(0);
         userWithoutLevel.setLevel(null);
 
-        userService.add(userWithLevel);
-        userService.add(userWithoutLevel);
+        userServiceImpl.add(userWithLevel);
+        userServiceImpl.add(userWithoutLevel);
 
         User userWithLevelRead = userDao.get(userWithLevel.getId());
         User userWithoutLevelRead = userDao.get(userWithoutLevel.getId());
@@ -106,7 +105,7 @@ public class UserServiceTest {
 
     @Test
     public void upgradeAllOrNothing(){
-        TestUserService testUserService = new TestUserService(users.get(3).getId());
+        TestUserServiceImpl testUserService = new TestUserServiceImpl(users.get(3).getId());
         testUserService.setUserDao(this.userDao);
         testUserService.setTransactionManager(transactionManager);
         testUserService.setMailSender(this.mailSender);
@@ -124,10 +123,10 @@ public class UserServiceTest {
         checkLevelUpgraded(users.get(1), false);
     }
 
-    static class TestUserService extends UserService {
+    static class TestUserServiceImpl extends UserServiceImpl {
         private String id;
 
-        public TestUserService(String id) {
+        public TestUserServiceImpl(String id) {
             this.id = id;
         }
 
