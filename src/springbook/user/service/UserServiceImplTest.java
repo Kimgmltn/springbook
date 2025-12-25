@@ -58,23 +58,30 @@ public class UserServiceImplTest {
     @Test
     @DirtiesContext //컨텍스트의 DI설정을 변경하는 테스트라는 뜻
     public void updateLevels(){
-        userDao.deleteAll();
-        for(User user : users) userDao.add(user);
+        UserServiceImpl userServiceImpl = new UserServiceImpl();
+
+        MockUserDao mockUserDao = new MockUserDao(this.users);
+        userServiceImpl.setUserDao(mockUserDao);
 
         MockMailSender mockMailSender = new MockMailSender();
         userServiceImpl.setMailSender(mockMailSender);
 
         userServiceImpl.upgradeLevels();
-        checkLevelUpgraded(users.get(0), false);
-        checkLevelUpgraded(users.get(1), true);
-        checkLevelUpgraded(users.get(2), false);
-        checkLevelUpgraded(users.get(3), true);
-        checkLevelUpgraded(users.get(4), false);
+
+        List<User> updated = mockUserDao.getUpdated();
+        assertThat(updated.size(), is(2));
+        checkUserAndLevel(updated.get(0), "test2", Level.SILVER);
+        checkUserAndLevel(updated.get(1), "test4", Level.GOLD);
 
         List<String> requests = mockMailSender.getRequests();
         assertThat(requests.size(), is(2));
         assertThat(requests.get(0), is(users.get(1).getEmail()));
         assertThat(requests.get(1), is(users.get(3).getEmail()));
+    }
+
+    private void checkUserAndLevel(User updated, String expectedId, Level expectedLevel) {
+        assertThat(updated.getId(), is(expectedId));
+        assertThat(updated.getLevel(), is(expectedLevel));
     }
 
     private void checkLevelUpgraded(User user, boolean upgraded) {
@@ -159,6 +166,48 @@ public class UserServiceImplTest {
         @Override
         public void send(SimpleMailMessage[] simpleMailMessages) throws MailException {
 
+        }
+    }
+
+    static class MockUserDao implements UserDao{
+        private List<User> users;
+        private List<User> updated = new ArrayList<>();
+
+        private MockUserDao(List<User> users){
+            this.users=users;
+        }
+        public List<User> getUpdated(){
+            return this.updated;
+        }
+
+        @Override
+        public void add(User user) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public User get(String id) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public int getCount() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void deleteAll() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public List<User> getAll() {
+            return this.users;
+        }
+
+        @Override
+        public void update(User user) {
+            updated.add(user);
         }
     }
 }
