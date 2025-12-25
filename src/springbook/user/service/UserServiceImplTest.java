@@ -107,14 +107,18 @@ public class UserServiceImplTest {
     public void upgradeAllOrNothing(){
         TestUserServiceImpl testUserService = new TestUserServiceImpl(users.get(3).getId());
         testUserService.setUserDao(this.userDao);
-        testUserService.setTransactionManager(transactionManager);
         testUserService.setMailSender(this.mailSender);
+
+        UserServiceTx txUserService = new UserServiceTx();
+        txUserService.setTransactionManager(transactionManager);
+        txUserService.setUserService(testUserService);
+
         userDao.deleteAll();
 
         for(User user : users) testUserService.add(user);
 
         try {
-            testUserService.upgradeLevels();
+            txUserService.upgradeLevels();
             fail("TestUserServiceException expected");
         } catch (TestUserServiceException e) {
 
