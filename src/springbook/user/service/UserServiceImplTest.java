@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
@@ -39,6 +40,8 @@ public class UserServiceImplTest {
     MailSender mailSender;
     @Autowired
     UserDao userDao;
+    @Autowired
+    ApplicationContext context;
     List<User> users;
     public static final int MIN_LOGCOUNT_FOR_SILVER = 50;
     public static final int MIN_RECCOMEND_FOR_GOLD = 30;
@@ -118,18 +121,16 @@ public class UserServiceImplTest {
     }
 
     @Test
+    @DirtiesContext //컨텍스트 무효화 애노테이션
     public void upgradeAllOrNothing() throws Exception{
         TestUserServiceImpl testUserService = new TestUserServiceImpl(users.get(3).getId());
         testUserService.setUserDao(this.userDao);
         testUserService.setMailSender(this.mailSender);
 
-        TransactionHandler txHandler = new TransactionHandler();
-        txHandler.setTarget(testUserService);
-        txHandler.setTransactionManager(this.transactionManager);
-        txHandler.setPattern("upgradeLevels");
-        UserService txUserService = (UserService) Proxy.newProxyInstance(
-                getClass().getClassLoader(), new Class[]{UserService.class}, txHandler
-        );
+        TxProxyFactoryBean txProxyFactoryBean //팩토리 빈 자체를 가져와야 하므로 빈 이름에 &를 반드시 넣어야함
+                = context.getBean("&userService", TxProxyFactoryBean.class);//테스트용 타깃 주입
+        txProxyFactoryBean.setTarget(testUserService);
+        UserService txUserService = (UserService) txProxyFactoryBean.getObject();
 
         userDao.deleteAll();
 

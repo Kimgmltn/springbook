@@ -13,9 +13,11 @@
 <!--        <property name="password" value="gmltn0323@"></property>-->
     </bean>
 
-    <bean id="userService" class="springbook.user.service.UserServiceTx">
+    <bean id="userService" class="springbook.user.service.TxProxyFactoryBean">
+        <property name="target" ref="userServiceImpl"/>
         <property name="transactionManager" ref="transactionManager"/>
-        <property name="userService" ref="userServiceImpl"/>
+        <property name="pattern" value="upgradeLevels"/>
+        <property name="serviceInterface" value="springbook.user.service.UserService"/>
     </bean>
 
     <bean id="userServiceImpl" class="springbook.user.service.UserServiceImpl">
@@ -23,9 +25,6 @@
         <property name="mailSender" ref="mailSender"/>
     </bean>
 
-<!--    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">-->
-<!--        <property name="host" value="mail.server.com"/>-->
-<!--    </bean>-->
     <bean id="mailSender" class="springbook.user.service.DummyMailSender">
     </bean>
 
@@ -37,10 +36,6 @@
         <property name="dataSource" ref="dataSource"/>
 <!--        <property name="jdbcContext" ref="jdbcContext"/>-->
     </bean>
-
-<!--    <bean id="jdbcContext" class="springbook.user.dao.JdbcContext">-->
-<!--        <property name="dataSource" ref="dataSource"/>-->
-<!--    </bean>-->
 
     <bean id="message" class="springbook.learningtest.factorybean.MessageFactoryBean">
         <property name="text" value="Factory Bean"/>
