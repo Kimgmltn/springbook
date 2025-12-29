@@ -8,9 +8,9 @@
         <property name="url" value="jdbc:postgresql://localhost:5432/postgres"/>
         <property name="username" value="heesu"/>
         <property name="password"><null/></property>
-<!--        <property name="username" value="postgres"/>-->
-<!--        <property name="url" value="jdbc:postgresql://localhost:5432/hs"/>-->
-<!--        <property name="password" value="gmltn0323@"></property>-->
+        <!--        <property name="username" value="postgres"/>-->
+        <!--        <property name="url" value="jdbc:postgresql://localhost:5432/hs"/>-->
+        <!--        <property name="password" value="gmltn0323@"></property>-->
     </bean>
 
     <bean id="userService" class="springbook.user.service.UserServiceTx">
@@ -23,9 +23,9 @@
         <property name="mailSender" ref="mailSender"/>
     </bean>
 
-<!--    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">-->
-<!--        <property name="host" value="mail.server.com"/>-->
-<!--    </bean>-->
+    <!--    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">-->
+    <!--        <property name="host" value="mail.server.com"/>-->
+    <!--    </bean>-->
     <bean id="mailSender" class="springbook.user.service.DummyMailSender">
     </bean>
 
@@ -35,12 +35,12 @@
 
     <bean id="userDao" class="springbook.user.dao.UserDaoJdbc">
         <property name="dataSource" ref="dataSource"/>
-<!--        <property name="jdbcContext" ref="jdbcContext"/>-->
+        <!--        <property name="jdbcContext" ref="jdbcContext"/>-->
     </bean>
 
-<!--    <bean id="jdbcContext" class="springbook.user.dao.JdbcContext">-->
-<!--        <property name="dataSource" ref="dataSource"/>-->
-<!--    </bean>-->
+    <!--    <bean id="jdbcContext" class="springbook.user.dao.JdbcContext">-->
+    <!--        <property name="dataSource" ref="dataSource"/>-->
+    <!--    </bean>-->
 
     <bean id="message" class="springbook.learningtest.factorybean.MessageFactoryBean">
         <property name="text" value="Factory Bean"/>
