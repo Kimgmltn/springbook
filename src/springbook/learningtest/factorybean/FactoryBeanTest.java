@@ -24,4 +24,10 @@ public class FactoryBeanTest {
         assertThat(message, is(Message.class));
         assertThat(((Message) message).getText(), is("Factory Bean")); //설정과 기능 확인
     }
+
+    @Test
+    public void getFactoryBean() throws Exception{
+        Object factory = context.getBean("&message");//&를 붙이면 빈팩토리를 return해준다.
+        assertThat(factory, is(MessageFactoryBean.class));
+    }
 }
