@@ -43,17 +43,4 @@
         <property name="text" value="Factory Bean"/>
     </bean>
 
-    <bean id="transactionAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">
-        <property name="advice" ref="transactionAdvice"/>
-        <property name="pointcut" ref="transactionPointcut"/>
-    </bean>
-
-    <bean id="transactionAdvice" class="springbook.user.service.TransactionAdvice">
-        <property name="transactionManager" ref="transactionManager"/>
-    </bean>
-
-    <bean id="transactionPointcut" class="org.springframework.aop.support.NameMatchMethodPointcut">
-        <property name="mappedNames" value="upgrade*"/>
-    </bean>
-
 </beans>
