@@ -13,11 +13,13 @@
 <!--        <property name="password" value="gmltn0323@"></property>-->
     </bean>
 
-    <bean id="userService" class="springbook.user.service.TxProxyFactoryBean">
+    <bean id="userService" class="org.springframework.aop.framework.ProxyFactoryBean">
         <property name="target" ref="userServiceImpl"/>
-        <property name="transactionManager" ref="transactionManager"/>
-        <property name="pattern" value="upgradeLevels"/>
-        <property name="serviceInterface" value="springbook.user.service.UserService"/>
+        <property name="interceptorNames">
+            <list>
+                <value>transactionAdvisor</value>
+            </list>
+        </property>
     </bean>
 
     <bean id="userServiceImpl" class="springbook.user.service.UserServiceImpl">
@@ -39,6 +41,19 @@
 
     <bean id="message" class="springbook.learningtest.factorybean.MessageFactoryBean">
         <property name="text" value="Factory Bean"/>
+    </bean>
+
+    <bean id="transactionAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">
+        <property name="advice" ref="transactionAdvice"/>
+        <property name="pointcut" ref="transactionPointcut"/>
+    </bean>
+
+    <bean id="transactionAdvice" class="springbook.user.service.TransactionAdvice">
+        <property name="transactionManager" ref="transactionManager"/>
+    </bean>
+
+    <bean id="transactionPointcut" class="org.springframework.aop.support.NameMatchMethodPointcut">
+        <property name="mappedNames" value="upgrade*"/>
     </bean>
 
 </beans>

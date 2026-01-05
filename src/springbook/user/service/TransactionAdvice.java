@@ -1,4 +1,4 @@
-package springbook.learningtest.jdk.proxy;
+package springbook.user.service;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
