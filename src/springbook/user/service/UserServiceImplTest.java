@@ -122,7 +122,6 @@ public class UserServiceImplTest {
     }
 
     @Test
-    @DirtiesContext //컨텍스트 무효화 애노테이션
     public void upgradeAllOrNothing() throws Exception{
         userDao.deleteAll();
 
@@ -136,6 +135,11 @@ public class UserServiceImplTest {
         }
 
         checkLevelUpgraded(users.get(1), false);
+    }
+
+    @Test
+    public void advisorAutoProxyCreator() {
+        assertThat(testUserService, is(java.lang.reflect.Proxy.class));
     }
 
     static class TestUserServiceImpl extends UserServiceImpl {

@@ -44,7 +44,7 @@
     </bean>
 
     <bean id="transactionPointcut" class="springbook.service.NameMatchClassMethodPointcut">
-        <property name="mappedNames" value="*ServiceImpl"/>
+        <property name="mappedClassName" value="*ServiceImpl"/>
         <property name="mappedName" value="upgrade*"/>
     </bean>
 
