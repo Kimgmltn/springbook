@@ -13,16 +13,7 @@
 <!--        <property name="password" value="gmltn0323@"></property>-->
     </bean>
 
-    <bean id="userService" class="org.springframework.aop.framework.ProxyFactoryBean">
-        <property name="target" ref="userServiceImpl"/>
-        <property name="interceptorNames">
-            <list>
-                <value>transactionAdvisor</value>
-            </list>
-        </property>
-    </bean>
-
-    <bean id="userServiceImpl" class="springbook.user.service.UserServiceImpl">
+    <bean id="userService" class="springbook.user.service.UserServiceImpl">
         <property name="userDao" ref="userDao"/>
         <property name="mailSender" ref="mailSender"/>
     </bean>
@@ -60,4 +51,8 @@
     <!--빈 후처리 해주는 advisor 등록-->
     <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"/>
 
+    <bean id="testUserService"
+          class="springbook.user.service.UserServiceImplTest$TestUserServiceImpl"
+          parent="userService"
+    /> <!--parent 속성: 프로퍼티 정의를 포함해서 userService 빈의 설정을 상속 -->
 </beans>

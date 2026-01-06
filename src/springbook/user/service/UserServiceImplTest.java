@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
 import org.springframework.aop.framework.ProxyFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -19,7 +18,6 @@ import springbook.user.dao.Level;
 import springbook.user.dao.UserDao;
 import springbook.user.domain.User;
 
-import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,7 +32,9 @@ import static org.mockito.Mockito.*;
 @ContextConfiguration(locations = "/test-applicationContext.xml")
 public class UserServiceImplTest {
     @Autowired
-    UserServiceImpl userServiceImpl;
+    UserService userService;
+    @Autowired
+    UserService testUserService;
     @Autowired
     PlatformTransactionManager transactionManager;
     @Autowired
@@ -60,7 +60,7 @@ public class UserServiceImplTest {
 
     @Test
     public void bean(){
-        assertThat(this.userServiceImpl, is(notNullValue()));
+        assertThat(this.userService, is(notNullValue()));
     }
 
     @Test
@@ -112,8 +112,8 @@ public class UserServiceImplTest {
         User userWithoutLevel = users.get(0);
         userWithoutLevel.setLevel(null);
 
-        userServiceImpl.add(userWithLevel);
-        userServiceImpl.add(userWithoutLevel);
+        userService.add(userWithLevel);
+        userService.add(userWithoutLevel);
 
         User userWithLevelRead = userDao.get(userWithLevel.getId());
         User userWithoutLevelRead = userDao.get(userWithoutLevel.getId());
@@ -124,21 +124,12 @@ public class UserServiceImplTest {
     @Test
     @DirtiesContext //컨텍스트 무효화 애노테이션
     public void upgradeAllOrNothing() throws Exception{
-        TestUserServiceImpl testUserService = new TestUserServiceImpl(users.get(3).getId());
-        testUserService.setUserDao(this.userDao);
-        testUserService.setMailSender(this.mailSender);
-
-        ProxyFactoryBean txProxyFactoryBean //팩토리 빈 자체를 가져와야 하므로 빈 이름에 &를 반드시 넣어야함
-                = context.getBean("&userService", ProxyFactoryBean.class);//테스트용 타깃 주입
-        txProxyFactoryBean.setTarget(testUserService);
-        UserService txUserService = (UserService) txProxyFactoryBean.getObject();
-
         userDao.deleteAll();
 
         for(User user : users) testUserService.add(user);
 
         try {
-            txUserService.upgradeLevels();
+            this.testUserService.upgradeLevels();
             fail("TestUserServiceException expected");
         } catch (TestUserServiceException e) {
 
@@ -148,11 +139,7 @@ public class UserServiceImplTest {
     }
 
     static class TestUserServiceImpl extends UserServiceImpl {
-        private String id;
-
-        public TestUserServiceImpl(String id) {
-            this.id = id;
-        }
+        private String id = "test4";
 
         @Override
         protected void upgradeLevel(User user) {
