@@ -9,8 +9,16 @@ import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 public class UserDaoJdbc implements UserDao{
+
+    private Map<String, Object> sqlMap;
+
+    public void setSqlMap(Map<String, Object> sqlMap) {
+        this.sqlMap = sqlMap;
+    }
+
     private JdbcTemplate jdbcTemplate;  //spring에서 제공하는 jdbcTemplate사용
 
     private RowMapper<User> userMapper = new RowMapper<User>() {
@@ -35,32 +43,32 @@ public class UserDaoJdbc implements UserDao{
     }
 
     public void add(User user) throws DuplicateUserIdException {
-        this.jdbcTemplate.update("insert into users(id, name, password, level, login, recommend, email) values (?,?,?,?,?,?,?)",
+        this.jdbcTemplate.update((String) this.sqlMap.get("add"),
                 user.getId(), user.getName(), user.getPassword(), user.getLevel().intValue(), user.getLogin(), user.getRecommend(), user.getEmail());
     }
 
     public User get(String id){
-        return this.jdbcTemplate.queryForObject("select * from users where id = ?",
+        return this.jdbcTemplate.queryForObject((String) this.sqlMap.get("get"),
                 new Object[] {id},
                 userMapper);
     }
 
     public int getCount(){
-        return this.jdbcTemplate.queryForInt("select count(*) from users");
+        return this.jdbcTemplate.queryForInt((String) this.sqlMap.get("getCount"));
     }
 
     public void deleteAll(){
-        this.jdbcTemplate.update("delete from users");
+        this.jdbcTemplate.update((String) this.sqlMap.get("deleteAll"));
     }
 
     public List<User> getAll() {
-        return this.jdbcTemplate.query("select * from users order by id",
+        return this.jdbcTemplate.query((String) this.sqlMap.get("getAll"),
                 userMapper);
     }
 
     @Override
     public void update(User user) {
-        this.jdbcTemplate.update("update users set name=?, password=?, level=?, login=?, recommend=?, email=? where id=?",
+        this.jdbcTemplate.update((String) this.sqlMap.get("update"),
                 user.getName(), user.getPassword(), user.getLevel().intValue(), user.getLogin(), user.getRecommend(), user.getEmail(), user.getId());
     }
 }
